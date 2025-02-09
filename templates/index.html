@@ -1,1 +1,85 @@
-hii
+{% extends 'base.html' %}
+{% block title %}Login page{% endblock %}
+{% block content %}
+
+<div>
+    <h1 style="color: navy; font-family: 'Montserrat', sans-serif">Welcome to QuizMaster</h1>
+    <h4 style="color: #4d4d4d; font-family: 'Lobster', cursive">Challenge Your Mind</h4>
+</div>
+
+<!-- Login Form -->
+<form action="" method="post">
+    <div class="mb-4">
+        <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+                <i class="bi bi-person text-muted"></i>
+            </span>
+            <input type="text" 
+                   class="form-control border-start-0 ps-0" 
+                   name="username" 
+                   placeholder="Username (email)"
+                   required>
+        </div>
+    </div>
+    <div class="mb-4">
+        <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+                <i class="bi bi-lock text-muted"></i>
+            </span>
+            <input type="password" 
+                   class="form-control border-start-0 ps-0" 
+                   name="password" 
+                   placeholder="Password"
+                   required>
+        </div>
+    </div>
+    <div class="d-grid mb-4">
+        <button type="submit" class="btn btn-primary btn-lg">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Log In
+        </button>
+    </div>
+</form>
+
+<!-- Links -->
+<div class="text-center">
+    <div class="mb-3">
+        <span class="text-muted">New to QuizMaster?</span>
+        <div class="mt-2">
+            <a href="{{ url_for('register_user') }}" class="btn btn-outline-primary me-2">
+                <i class="bi bi-mortarboard me-1"></i>Register Yourself
+            </a>
+        </div>
+    </div>
+ 
+    
+    <style>
+        .text-primary {
+            color: #FFC107 !important;
+        }
+        .input-group-text {
+            background-color: #f8f9fa;
+            border-right: none;
+        }
+        .form-control {
+            border-left: none;
+            box-shadow: none !important;
+        }
+        .form-control:focus {
+            border-color: #dee2e6;
+        }
+        .form-control:focus + .input-group-text {
+            border-color: #dee2e6;
+        }
+        .btn-lg {
+            padding: 0.75rem 1.5rem;
+        }
+        .card {
+            border-radius: 1rem;
+        }
+        .card-body {
+            border-radius: 1rem;
+        }
+    </style>
+    
+{% endblock %}
+

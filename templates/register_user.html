@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}Registration{% endblock %}
+{% block content %}
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-body p-4 p-md-5">
+          <!-- Logo and Tagline -->
+          <div class="text-center mb-4">
+            <h1 class="display-5 text-primary fw-bold mb-2">Welcome</h1>
+            <h4 class="mb-2">QuizMaster - Challenge Your Mind</h4>
+            <p class="text-muted">Registration</p>
+          </div>
+
+          <!-- Registration Form -->
+          <form action="" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input type="email" class="form-control" id="username" name="username"
+                    placeholder="Registration Number" required>
+                  <label for="username">Username (E-mail)</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" required>
+                  <label for="name">Full Name</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input type="password" class="form-control" id="password" name="password" placeholder="Password"
+                    required>
+                  <label for="password">Password</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating mb-3">
+                  <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                    placeholder="Confirm Password" required>
+                  <label for="confirm_password">Confirm Password</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <!-- Date -->
+                <label for="date" class="form-label">
+                  <i class="bi bi-calendar-event me-2"></i>Date of birth
+                </label>
+                <div class="input-group">
+                  <input type="date" class="form-control" id="date" name="dob" required min="{{ today }}" />
+                </div>
+                <div class="invalid-feedback">
+                  <i class="bi bi-exclamation-circle me-1"></i>
+                  Please select a valid date of birth.
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="qualification" class="form-label">
+                  <i class="bi bi-calendar-event me-2"></i>Qualification</label>
+                <select name="qualification" class="form-select" id="qualification" required>
+                  <option value="" selected disabled>Please select your qualification</option>
+                  <option value="High School">High School</option>
+                  <option value="Entermediate">Entermediate</option>
+                  <option value="Graduation">Graduation</option>
+                  <option value="Post Graduation">Post Graduation</option>
+                </select>
+                
+              </div>
+            </div><br>
+
+
+              <div class="d-grid gap-3">
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="bi bi-person-plus me-2"></i>Register
+                </button>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                  <i class="bi bi-arrow-left me-2"></i>Back to Login
+                </a>
+              </div>
+          </form>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .form-floating>.form-control,
+  .form-floating>.form-select {
+    height: calc(3.5rem + 2px);
+    line-height: 1.25;
+  }
+
+  .form-floating>label {
+    padding: 1rem 0.75rem;
+  }
+
+  .card {
+    transition: transform 0.2s ease;
+  }
+
+  .btn-primary {
+    border: none;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #9f1ae2;
+    box-shadow: 0 0 0 0.25rem rgba(159, 26, 226, 0.25);
+  }
+
+  .text-primary {
+    color: #FFC107 !important;
+  }
+</style>
+
+<script>
+  // Form validation
+  (function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+
+  // Password match validation
+  document.getElementById('confirm_password').addEventListener('input', function () {
+    if (this.value !== document.getElementById('password').value) {
+      this.setCustomValidity('Passwords do not match');
+    } else {
+      this.setCustomValidity('');
+    }
+  });
+</script>
+{% endblock %}

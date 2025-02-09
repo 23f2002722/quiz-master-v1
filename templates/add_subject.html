@@ -1,0 +1,26 @@
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {%
+    block content %}
+   
+
+
+    <div class="container">
+        <h2 class="text-center text-warning">New Subject</h2>
+        <form action="/dashboard/add_subject" method="POST">
+            <div class="mb-3">
+                <label for="subjectName" class="form-label">Name:</label>
+                <input type="text" class="form-control" id="subjectName" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="subjectDescription" class="form-label">Description:</label>
+                <textarea class="form-control" id="subjectDescription" name="description" rows="3" required></textarea>
+            </div>
+           
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="reset" class="btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+
+{% endblock %}

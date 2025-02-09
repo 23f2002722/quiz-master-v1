@@ -1,0 +1,55 @@
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {%
+    block content %}
+    <h1>Welcome, {{ user.full_name }}</h1>
+    
+    <section>
+        <h2>Your Details</h2>
+        <ul>
+            <li>E-mail: {{ user.username }}</li>
+            <li>Date of birth: {{ user.dob }}</li>
+            <li>Qualification: {{ user.qualification }}</li>
+        </ul>
+    </section>
+
+    <div class="text-center my-4">
+        <a href="{{ url_for('add_subject') }}" class="btn btn-primary">
+            Add Subject
+        </a>
+    </div>
+
+    <section>
+        <h2>Your Subject</h2>
+    
+        {% if subject %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub in subject %}
+                <tr>
+                    
+                    <td>{{ sub.name }}</td>
+                    <td>{{ sub.description }}</td>
+                </tr>
+                <td>
+                    <form action="/dashboard/admin/delete_subject/{{ sub.id }}" method="post">
+                      <button type="submit">Delete</button>
+                    </form>
+                    
+                  </td>
+                
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No subjects yet.</p>
+        {% endif %}
+    </section>
+
+
+    
+    {% endblock %}
