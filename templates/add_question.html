@@ -1,0 +1,62 @@
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {%
+    block content %}
+
+
+
+    <div class="container">
+        <h2>New Question</h2>
+
+        <form action="/dashboard/quiz_management/add_question/{{quiz.id}}" method="POST">
+            <div class="form-group">
+                <h5>Chapter name: {{quiz.chapter.name}}</h5>
+                <h5>Quiz type: {{quiz.type}}</h5>
+                <br><h3>Q.No. {{count}}</h3>
+            </div>
+
+            <div class="form-group">
+                <label for="question_statement">Question Statement:</label>
+                <textarea id="question_statement" name="question_statement" rows="3" required></textarea>
+            </div>
+
+            <div class="options-container">
+                <h3>Single Option Correct</h3>
+                
+                <div class="form-group">
+                    <label for="option1">Option 1:</label>
+                    <input type="text" id="option1" name="option1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="option2">Option 2:</label>
+                    <input type="text" id="option2" name="option2" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="option3">Option 3:</label>
+                    <input type="text" id="option3" name="option3" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="option4">Option 4:</label>
+                    <input type="text" id="option4" name="option4" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="correct_option">Correct Option:</label>
+                    <select id="correct_option" name="correct_option" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button type="submit" class="save-btn">Save and Next</button>
+                <button type="button" class="close-btn" onclick="window.close()">Close</button>
+            </div>
+        </form>
+    </div>
+
+{%endblock%}

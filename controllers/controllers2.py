@@ -33,8 +33,18 @@ def dashboard():
         else:
              subject=db.session.query(Subject).all()
              chapters=db.session.query(Chapter).all()
-             return render_template("admin.html",user=user,subject=subject,chapters=chapters)
-        
+             chapter_questions_count = {
+        chapter.id: db.session.query(Question)
+        .join(Quiz)
+        .filter(Quiz.chapter_id == chapter.id)
+        .count()
+        for chapter in chapters
+    }
+             return render_template("admin.html",user=user,subject=subject,chapters=chapters,chapter_questions_count=chapter_questions_count)
+
+# ================
+# Add Subject 
+# ================
 @app.route("/dashboard/admin/add_subject", methods=["GET", "POST"])
 @auth_required
 def add_subject():
@@ -50,6 +60,9 @@ def add_subject():
         else:
              return render_template("add_subject.html",user=user)
         
+# ================
+# Delete Subject 
+# ================
 @app.route("/dashboard/admin/delete_subject/<int:subject_id>", methods=["POST"])
 @auth_required
 def delete_subject(subject_id):
@@ -58,6 +71,10 @@ def delete_subject(subject_id):
     db.session.commit()
     return redirect(url_for("dashboard"))
 
+
+# ================
+# Add Chapter 
+# ================
 @app.route("/dashboard/admin/add_chapter/<int:subject_id>", methods=["GET","POST"])
 @auth_required
 def add_chapter(subject_id):
@@ -71,12 +88,20 @@ def add_chapter(subject_id):
         return redirect(url_for("dashboard"))
     else:
         return render_template("add_chapter.html",subject_id=subject_id,user=user)
-     
+    
+
+# ================
+# Edit Chapter 
+# ================
 @app.route("/dashboard/admin/edit_chapter/<int:chapter_id>", methods=["POST"])
 @auth_required
 def edit_chapter(chapter_id):
      return render_template("blank.html")
 
+
+# ================
+# Delete Chapter 
+# ================
 @app.route("/dashboard/admin/delete_chapter/<int:chapter_id>", methods=["POST"])
 @auth_required
 def delete_chapter(chapter_id):
@@ -85,6 +110,10 @@ def delete_chapter(chapter_id):
     db.session.commit()
     return redirect(url_for("dashboard"))
 
+
+# ================
+# Quiz Management 
+# ================
 @app.route("/dashboard/quiz_management", methods=["GET","POST"])
 @auth_required
 def quiz_management():
@@ -92,6 +121,10 @@ def quiz_management():
      quiz=db.session.query(Quiz).all()
      return render_template("quiz_management.html",user=user,quiz=quiz)
 
+
+# ================
+# Chapterwise Quiz 
+# ================
 @app.route("/dashboard/quiz/<int:chapter_id>", methods=["GET","POST"])
 @auth_required
 def quiz(chapter_id):
@@ -99,6 +132,10 @@ def quiz(chapter_id):
      quiz=Quiz.query.filter_by(chapter_id=chapter_id).all()
      return render_template("quiz_management.html",user=user,quiz=quiz)
 
+
+# ================
+# Add Quiz 
+# ================
 @app.route("/dashboard/quiz_management/add_quiz", methods=["GET","POST"])
 @auth_required
 def add_quiz():
@@ -140,11 +177,15 @@ def add_quiz():
         quiz = Quiz(type=type,chapter_id=chapter_id,date_of_quiz=date_of_quiz,time_duration=duration,remarks=remarks)
         db.session.add(quiz)
         db.session.commit()
-        return redirect(url_for("dashboard"))
+        return redirect(request.referrer)
     else:
         chapter=db.session.query(Chapter).all()
         return render_template("add_quiz.html",user=user,chapter=chapter)
-          
+
+
+# ================
+# Delete Quiz 
+# ================
 @app.route("/dashboard/delete_quiz/<int:quiz_id>", methods=["POST"])
 @auth_required
 def delete_quiz(quiz_id):
@@ -154,20 +195,70 @@ def delete_quiz(quiz_id):
     flash("Quiz deleted successfully.")
     return redirect(request.referrer)
 
+
+# ================
+# Add Question 
+# ================
 @app.route("/dashboard/quiz_management/add_question/<int:quiz_id>", methods=["GET","POST"])
 @auth_required
 def add_question(quiz_id):
-    user = User.query.get(session["user_id"])
-    return render_template("blank.html")
-     
-@app.route("/dashboard/quiz_management/edit_question/<int:quiz_id>", methods=["POST"])
+    if request.method == 'POST':
+        statement = request.form.get('question_statement')
+        option1 = request.form.get('option1')
+        option2 = request.form.get('option2')
+        option3 = request.form.get('option3')
+        option4 = request.form.get('option4')
+        correct_option = request.form.get('correct_option')
+
+        # Validation (Ensure all fields are filled)
+        if not all([statement, option1, option2, option3, option4, correct_option]):
+            flash('All fields are required!', 'danger')
+            return redirect(url_for('add_question', quiz_id=quiz_id))
+
+        # Create new question instance
+        new_question = Question(
+            quiz_id=quiz_id,
+            question_statement=statement,
+            option1=option1,
+            option2=option2,
+            option3=option3,
+            option4=option4,
+            correct_option=int(correct_option)
+        )
+
+        # Add to database
+        db.session.add(new_question)
+        db.session.commit()
+
+        flash('Question added successfully!', 'success')
+
+        # Redirect back to the same quiz page after adding
+        return redirect(url_for('add_question', quiz_id=quiz_id),code=303)
+    
+    else:
+        user = User.query.get(session["user_id"])
+        quiz=Quiz.query.filter_by(id=quiz_id).first()
+        question_count = Question.query.filter_by(quiz_id=quiz_id).count()
+        return render_template("add_question.html",user=user,quiz=quiz,count=question_count+1)
+    
+
+# ================
+# Edit Question 
+# ================
+@app.route("/dashboard/quiz_management/edit_question/<int:question_id>", methods=["POST"])
 @auth_required
-def edit_question(quiz_id):
+def edit_question(question_id):
      return render_template("blank.html")
 
-@app.route("/dashboard/quiz_management/delete_question/<int:quiz_id>", methods=["POST"])
+
+# ================
+# Delete Question 
+# ================
+@app.route("/dashboard/quiz_management/delete_question/<int:question_id>", methods=["POST"])
 @auth_required
-def delete_question(quiz_id):
-    
-    return render_template("blank.html")
+def delete_question(question_id):
+    question=Question.query.filter_by(id=question_id).first()
+    db.session.delete(question)
+    db.session.commit()
+    return redirect(request.referrer)
    

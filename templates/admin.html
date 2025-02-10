@@ -2,100 +2,85 @@
 {% block title %}Dashboard{% endblock %} 
 {% block content %}
 
-<h1>Welcome, {{ user.full_name }}</h1>
+<div class="container mt-4">
+    <h1 class="text-center">Welcome, {{ user.full_name }}</h1>
 
-<section>
-    <h2>Your Details</h2>
-    <ul>
-        <li>E-mail: {{ user.username }}</li>
-        <li>Date of birth: {{ user.dob }}</li>
-        <li>Qualification: {{ user.qualification }}</li>
-    </ul>
-</section>
 
-<div class="text-center my-4">
-    <a href="{{ url_for('add_subject') }}" class="btn btn-primary">
-        Add Subject
-    </a>
-</div>
+    <div class="text-center my-4">
+        <a href="{{ url_for('add_subject') }}" class="btn btn-primary">Add Subject</a>
+    </div>
 
-<section>
-    <h2>Your Subjects</h2>
+    <section>
+        <h2>Your Subjects</h2>
 
-    {% if subject %}
-    <table>
-        <thead>
-            <tr>
-                <th>Subject</th>
-                <th>Description</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
+        {% if subject %}
+        <div class="row">
             {% for sub in subject %}
-            <tr>
-                <td>{{ sub.name }}</td>
-                <td>{{ sub.description }}</td>
-                <td>
-                    <form action="/dashboard/admin/delete_subject/{{ sub.id }}" method="post">
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
-            </tr>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card shadow border rounded p-3">
+                    <h4 class="text-center">{{ sub.name }}</h4>
 
-            <!-- Display Chapters for this Subject -->
-            {% if chapters %}
-            <tr>
-                <td colspan="3">
-                    <table>
-                        <thead>
+                    {% if chapters %}
+                    <table class="table table-bordered mt-3">
+                        <thead class="table-primary">
                             <tr>
                                 <th>Chapter Name</th>
                                 <th>No. of Questions</th>
-                                <th>Actions</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for chapter in chapters if chapter.subject_id == sub.id %}
                             <tr>
-                                <td><form action="/dashboard/quiz/{{ chapter.id }}" method="POST">
-                                    <a href="#" onclick="this.closest('form').submit()">{{ chapter.name }}</a>
-                                  </form></td>
-                                
-                                <td>{{ chapter.num_questions }}</td>
                                 <td>
-                                    <form action="/dashboard/admin/delete_chapter/{{ chapter.id }}" method="post" style="display:inline;">
-                                        <button type="submit">Delete</button>
+                                    <form action="/dashboard/quiz/{{ chapter.id }}" method="POST" class="d-inline">
+                                        <a href="#" onclick="this.closest('form').submit()">{{ chapter.name }}</a>
                                     </form>
-                                    <form action="/dashboard/admin/edit_chapter/{{ chapter.id }}" method="post" style="display:inline;">
-                                        <button type="submit">Edit</button>
+                                </td>
+                                <td class="text-center">{{ chapter_questions_count[chapter.id] }}</td>
+                                <td>
+                                    <form action="/dashboard/admin/edit_chapter/{{ chapter.id }}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+                                    </form>
+                                    <form action="/dashboard/admin/delete_chapter/{{ chapter.id }}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                     </form>
                                 </td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                </td>
-            </tr>
-            {% endif %}
+                    {% endif %}
 
-            <!-- Add Chapter Button Below Each Subject -->
-            <tr>
-                <td colspan="3">
-                    <a href="{{ url_for('add_chapter', subject_id=sub.id) }}" class="btn btn-primary">
-                        Add chapter
-                    </a>
-                </td>
-            </tr>
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('add_chapter', subject_id=sub.id) }}" class="btn btn-pink">+ Chapter</a>
+                    </div>
 
+                    <div class="text-center mt-2">
+                        <form action="/dashboard/admin/delete_subject/{{ sub.id }}" method="post">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete Subject</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No subjects yet.</p>
+        {% endif %}
+    </section>
+</div>
 
-    {% else %}
-    <p>No subjects yet.</p>
-    {% endif %}
-
-</section>
+<style>
+    .btn-pink {
+        background-color: #f8c8dc;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+    }
+    .btn-pink:hover {
+        background-color: #f5a9c4;
+    }
+</style>
 
 {% endblock %}

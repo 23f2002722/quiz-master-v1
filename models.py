@@ -67,7 +67,7 @@ class Subject(db.Model):
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)
-    question_statement = db.Column(db.String(255), nullable=False)
+    question_statement = db.Column(db.String(255), nullable=False, unique=True)
     option1 = db.Column(db.String(100), nullable=False)
     option2 = db.Column(db.String(100), nullable=False)
     option3 = db.Column(db.String(100), nullable=False)
