@@ -1,0 +1,36 @@
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {%
+block content %}
+
+
+
+<div class="container">
+    <h2>New Quiz</h2>
+    <form action="/dashboard/quiz_management/add_quiz" method="POST">
+        <label for="chapter">Chapter ID:</label>
+        <select id="chapter" name="chapter_id">
+            <option value="">Select Chapter</option>
+            {% for ch in chapter %}
+            <option value="{{ ch.id }}">{{ch.id}} [{{ ch.name }}]</option>
+            {% endfor %}
+        </select>
+
+        <label for="text">Type:</label>
+        <input type="text" id="text" name="type">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date">
+
+        <label for="duration">Duration:</label>
+        <input type="int" id="duration" name="duration">
+        <label for="text">Remarks:</label>
+        <input type="text" id="text" name="remarks">
+
+
+        <div class="buttons">
+            <button type="submit" class="save">Save</button>
+            <button type="button" class="cancel" onclick="window.history.back()">Cancel</button>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}

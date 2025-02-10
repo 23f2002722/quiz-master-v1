@@ -28,13 +28,14 @@ class User(db.Model):
 # Quizzes Table - Stores quiz data
 class Quiz(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    type=db.Column(db.String(50))
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'), nullable=False)
     date_of_quiz = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     time_duration = db.Column(db.String(5))  # format: HH:MM
     remarks = db.Column(db.String(255))
 
-    questions = db.relationship('Question', backref='quiz', lazy=True)
-    scores = db.relationship('Score', backref='quiz', lazy=True)
+    questions = db.relationship('Question', backref='quiz', lazy=True, cascade="all, delete-orphan")
+    scores = db.relationship('Score', backref='quiz', lazy=True, cascade="all, delete-orphan")
 
     def __repr__(self):
         return f'<Quiz {self.id}>'
@@ -46,7 +47,7 @@ class Chapter(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(255))
 
-    quizzes = db.relationship('Quiz', backref='chapter', lazy=True)
+    quizzes = db.relationship('Quiz', backref='chapter', lazy=True, cascade="all, delete-orphan")
 
     def __repr__(self):
         return f'<Chapter {self.name}>'
@@ -57,7 +58,7 @@ class Subject(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(255))
 
-    chapters = db.relationship('Chapter', backref='subject', lazy=True)
+    chapters = db.relationship('Chapter', backref='subject', lazy=True, cascade="all, delete-orphan")
 
     # def __repr__(self):
     #     return f'<Subject {self.name}>'

@@ -1,55 +1,101 @@
-{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {%
-    block content %}
-    <h1>Welcome, {{ user.full_name }}</h1>
-    
-    <section>
-        <h2>Your Details</h2>
-        <ul>
-            <li>E-mail: {{ user.username }}</li>
-            <li>Date of birth: {{ user.dob }}</li>
-            <li>Qualification: {{ user.qualification }}</li>
-        </ul>
-    </section>
+{% extends "base.html" %} 
+{% block title %}Dashboard{% endblock %} 
+{% block content %}
 
-    <div class="text-center my-4">
-        <a href="{{ url_for('add_subject') }}" class="btn btn-primary">
-            Add Subject
-        </a>
-    </div>
+<h1>Welcome, {{ user.full_name }}</h1>
 
-    <section>
-        <h2>Your Subject</h2>
-    
-        {% if subject %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Subject</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for sub in subject %}
-                <tr>
-                    
-                    <td>{{ sub.name }}</td>
-                    <td>{{ sub.description }}</td>
-                </tr>
+<section>
+    <h2>Your Details</h2>
+    <ul>
+        <li>E-mail: {{ user.username }}</li>
+        <li>Date of birth: {{ user.dob }}</li>
+        <li>Qualification: {{ user.qualification }}</li>
+    </ul>
+</section>
+
+<div class="text-center my-4">
+    <a href="{{ url_for('add_subject') }}" class="btn btn-primary">
+        Add Subject
+    </a>
+</div>
+
+<section>
+    <h2>Your Subjects</h2>
+
+    {% if subject %}
+    <table>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sub in subject %}
+            <tr>
+                <td>{{ sub.name }}</td>
+                <td>{{ sub.description }}</td>
                 <td>
                     <form action="/dashboard/admin/delete_subject/{{ sub.id }}" method="post">
-                      <button type="submit">Delete</button>
+                        <button type="submit">Delete</button>
                     </form>
-                    
-                  </td>
-                
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>No subjects yet.</p>
-        {% endif %}
-    </section>
+                </td>
+            </tr>
 
+            <!-- Display Chapters for this Subject -->
+            {% if chapters %}
+            <tr>
+                <td colspan="3">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Chapter Name</th>
+                                <th>No. of Questions</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for chapter in chapters if chapter.subject_id == sub.id %}
+                            <tr>
+                                <td><form action="/dashboard/quiz/{{ chapter.id }}" method="POST">
+                                    <a href="#" onclick="this.closest('form').submit()">{{ chapter.name }}</a>
+                                  </form></td>
+                                
+                                <td>{{ chapter.num_questions }}</td>
+                                <td>
+                                    <form action="/dashboard/admin/delete_chapter/{{ chapter.id }}" method="post" style="display:inline;">
+                                        <button type="submit">Delete</button>
+                                    </form>
+                                    <form action="/dashboard/admin/edit_chapter/{{ chapter.id }}" method="post" style="display:inline;">
+                                        <button type="submit">Edit</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            {% endif %}
 
-    
-    {% endblock %}
+            <!-- Add Chapter Button Below Each Subject -->
+            <tr>
+                <td colspan="3">
+                    <a href="{{ url_for('add_chapter', subject_id=sub.id) }}" class="btn btn-primary">
+                        Add chapter
+                    </a>
+                </td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <p>No subjects yet.</p>
+    {% endif %}
+
+</section>
+
+{% endblock %}
