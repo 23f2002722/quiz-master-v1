@@ -5,8 +5,9 @@ app = Flask(__name__)
 
 import config
 import models
-from controllers import controllers1
-from controllers import controllers2
+from controllers import controllers_login
+from controllers import controllers_admin
+from controllers import controllers_users
 
 
 

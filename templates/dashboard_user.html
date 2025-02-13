@@ -1,0 +1,71 @@
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {%
+    block content %}
+    <h1>Welcome, {{ user.full_name }}</h1>
+    
+    <section>
+        <h2>Upcoming Quizzes</h2>
+    
+        {% if quiz %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Quiz</th>
+                    <th>No. of questions</th>
+                    <th>Date</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for quiz in quiz if quiz_questions_count[quiz.id] > 0 %}
+                <tr>
+                    <td>{{ quiz.type }} ({{quiz.chapter.name}}) </td>
+                    <td >{{ quiz_questions_count[quiz.id] }}</td>
+                    <td>{{ quiz.date_of_quiz.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ quiz.time_duration }} minutes </td>
+                    <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#quizModal{{quiz.id}}">
+                        View
+                    </button></td>
+                    <td>
+                        <a href="{{ url_for('start_quiz', quiz_id=quiz.id) }}" class="btn btn-primary">Start Quiz</a>
+                    </td>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="quizModal{{quiz.id}}" tabindex="-1" aria-labelledby="quizModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="quizModalLabel">View the Quiz</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><strong>ID:</strong> <span id="quiz-id">{{quiz.id}}</span></p>
+                                    <p><strong>Subject:</strong> <span id="quiz-subject" class="badge bg-success">{{quiz.chapter.subject.name}}</span></p>
+                                    <p><strong>Description:</strong> <span  >{{quiz.chapter.subject.description}}</span></p>
+                                    <p><strong>Chapter:</strong> <span id="quiz-chapter" class="badge bg-primary">{{quiz.chapter.name}}</span></p>
+                                    <p><strong>Description:</strong> <span  >{{quiz.chapter.description}}</span></p>
+                                    <p><strong>Number of Questions:</strong> <span id="quiz-questions">{{ quiz_questions_count[quiz.id] }}</span></p>
+                                    <p><strong>Date:</strong> <span id="quiz-date">{{ quiz.date_of_quiz.strftime('%Y-%m-%d') }}</span></p>
+                                    <p><strong>Duration (minutes):</strong> <span id="quiz-duration">{{ quiz.time_duration }}</span></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </tr>
+                <!-- View Quiz Button -->
+
+                
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No quiz yet.</p>
+        {% endif %}
+    </section>
+    
+
+    
+    {% endblock %}

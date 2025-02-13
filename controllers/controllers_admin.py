@@ -3,10 +3,11 @@ import csv
 from flask import render_template, request, url_for, redirect, flash, session, Response
 from app import app
 from models import *
-from controllers.controllers1 import *
+from controllers.controllers_login import *
+from controllers.controllers_users import *
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, and_
 from sqlalchemy import func
 from functools import wraps
 
@@ -17,7 +18,7 @@ def auth_required(func):
             return func(*args, **kwargs)
         else:
             flash("Please login to continue")
-            return redirect(url_for("home"))
+            return redirect(url_for("index"))
 
     return inner
 
@@ -29,18 +30,25 @@ def auth_required(func):
 def dashboard():
         user = User.query.get(session["user_id"])
         if user.role=="user":
-            return render_template("dashboard.html",user=user)
+            current_date = date.today().isoformat()
+            attempted_quiz_id = db.session.query(Score.quiz_id).filter(Score.user_id == user.id)
+
+# Main Query: Get quizzes that are in the future AND not attempted
+            quiz = Quiz.query.filter(
+    and_(
+        Quiz.date_of_quiz >= current_date,  # Future quizzes
+        ~Quiz.id.in_(attempted_quiz_id)  # Exclude attempted quizzes
+    )
+).all()
+            quiz_questions_count = {quiz.id: db.session.query(Question).filter(Question.quiz_id == quiz.id).count()
+            for quiz in quiz}
+            return render_template("dashboard_user.html",user=user,quiz=quiz,quiz_questions_count=quiz_questions_count)
         else:
              subject=db.session.query(Subject).all()
              chapters=db.session.query(Chapter).all()
-             chapter_questions_count = {
-        chapter.id: db.session.query(Question)
-        .join(Quiz)
-        .filter(Quiz.chapter_id == chapter.id)
-        .count()
-        for chapter in chapters
-    }
-             return render_template("admin.html",user=user,subject=subject,chapters=chapters,chapter_questions_count=chapter_questions_count)
+             chapter_questions_count = {chapter.id: db.session.query(Question).join(Quiz).filter(Quiz.chapter_id == chapter.id).count()
+             for chapter in chapters}
+             return render_template("dashboard_admin.html",user=user,subject=subject,chapters=chapters,chapter_questions_count=chapter_questions_count)
 
 # ================
 # Add Subject 
@@ -49,6 +57,9 @@ def dashboard():
 @auth_required
 def add_subject():
         user = User.query.get(session["user_id"])
+        if user.role=="user":
+            flash("Not authorised.")
+            return redirect(url_for("dashboard"))
         if request.method=="POST":
              name = request.form.get("name")
              description = request.form.get("description")
@@ -93,10 +104,18 @@ def add_chapter(subject_id):
 # ================
 # Edit Chapter 
 # ================
-@app.route("/dashboard/admin/edit_chapter/<int:chapter_id>", methods=["POST"])
+@app.route("/dashboard/admin/edit_chapter/<int:chapter_id>", methods=["GET","POST"])
 @auth_required
 def edit_chapter(chapter_id):
-     return render_template("blank.html")
+    user=User.query.get(session["user_id"])
+    chapter=Chapter.query.filter_by(id=chapter_id).first()
+    if request.method=="POST":
+        chapter.name=request.form.get("name")
+        chapter.description=request.form.get("description")
+        db.session.commit()
+        return redirect(url_for("dashboard"))
+    else:
+        return render_template("edit_chapter.html",user=user,chapter=chapter)
 
 
 # ================
@@ -119,7 +138,12 @@ def delete_chapter(chapter_id):
 def quiz_management():
      user=User.query.get(session["user_id"])
      quiz=db.session.query(Quiz).all()
-     return render_template("quiz_management.html",user=user,quiz=quiz)
+     quiz_questions_count = {
+    quiz.id: db.session.query(Question).filter(Question.quiz_id == quiz.id).count()
+    for quiz in quiz
+}
+
+     return render_template("quiz_management.html",user=user,quiz=quiz,quiz_questions_count=quiz_questions_count)
 
 
 # ================
@@ -130,7 +154,12 @@ def quiz_management():
 def quiz(chapter_id):
      user=User.query.get(session["user_id"])
      quiz=Quiz.query.filter_by(chapter_id=chapter_id).all()
-     return render_template("quiz_management.html",user=user,quiz=quiz)
+     quiz_questions_count = {
+    quiz.id: db.session.query(Question).filter(Question.quiz_id == quiz.id).count()
+    for quiz in quiz
+}
+
+     return render_template("quiz_management.html",user=user,quiz=quiz,quiz_questions_count=quiz_questions_count)
 
 
 # ================
@@ -172,15 +201,17 @@ def add_quiz():
                 "Invalid date format. Use YYYY-MM-DD for date and HH:MM for time.",
                 "danger",
             )
-            return redirect(url_for("add_quiz"))
+            return redirect(request.referrer)
         
         quiz = Quiz(type=type,chapter_id=chapter_id,date_of_quiz=date_of_quiz,time_duration=duration,remarks=remarks)
         db.session.add(quiz)
+        flash("Quiz added successfully")
         db.session.commit()
-        return redirect(request.referrer)
+        return redirect(url_for("quiz_management"))
     else:
         chapter=db.session.query(Chapter).all()
-        return render_template("add_quiz.html",user=user,chapter=chapter)
+        current_date = date.today().isoformat()
+        return render_template("add_quiz.html",user=user,chapter=chapter,current_date=current_date)
 
 
 # ================
@@ -223,7 +254,7 @@ def add_question(quiz_id):
             option2=option2,
             option3=option3,
             option4=option4,
-            correct_option=int(correct_option)
+            correct_option=correct_option
         )
 
         # Add to database
@@ -245,10 +276,23 @@ def add_question(quiz_id):
 # ================
 # Edit Question 
 # ================
-@app.route("/dashboard/quiz_management/edit_question/<int:question_id>", methods=["POST"])
+@app.route("/dashboard/quiz_management/edit_question/<int:question_id>", methods=["GET","POST"])
 @auth_required
 def edit_question(question_id):
-     return render_template("blank.html")
+     user=User.query.get(session["user_id"])
+     question=Question.query.filter_by(id=question_id).first()
+     if request.method=="POST":
+         question.question_statement=request.form.get("question_statement")
+         question.option1=request.form.get("option1")
+         question.option2=request.form.get("option2")
+         question.option3=request.form.get("option3")
+         question.option4=request.form.get("option4")
+         question.correct_option=request.form.get("correct_option")
+         db.session.commit()
+         flash('Question updated successfully!', 'success')
+         return redirect(request.referrer)
+     else:
+        return render_template("edit_question.html",user=user,question=question)
 
 
 # ================
@@ -262,3 +306,24 @@ def delete_question(question_id):
     db.session.commit()
     return redirect(request.referrer)
    
+# ================
+# Show User 
+# ================
+@app.route("/admin/show_users", methods=["GET","POST"])
+@auth_required
+def show_users():
+    user=User.query.get(session["user_id"])
+    users=User.query.filter_by(role="user").all()
+    return render_template("show_users.html",users=users,user=user)
+
+# ================
+# Delete User 
+# ================
+@app.route("/admin/delete_user/<int:id>", methods=["POST"])
+@auth_required
+def delete_user(id):
+    user=User.query.get(id)
+    db.session.delete(user)
+    flash("User deleted successfully")
+    db.session.commit()
+    return redirect(url_for("show_users"))

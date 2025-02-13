@@ -1,7 +1,8 @@
 from flask import render_template, request, url_for, redirect, flash, session, Response
 from app import app
 from models import *
-from controllers.controllers2 import *
+from controllers.controllers_admin import *
+from controllers.controllers_users import *
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 

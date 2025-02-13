@@ -5,20 +5,40 @@
 <div class="container mt-4">
     <h1 class="text-center">Welcome, {{ user.full_name }}</h1>
 
-
+    <form action="/admin/show_users" method="POST">
+        <a href="#" onclick="this.closest('form').submit()">Users</a>
+      </form>
     <div class="text-center my-4">
         <a href="{{ url_for('add_subject') }}" class="btn btn-primary">Add Subject</a>
     </div>
 
     <section>
-        <h2>Your Subjects</h2>
+        <h2>Subjects</h2>
 
         {% if subject %}
         <div class="row">
             {% for sub in subject %}
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card shadow border rounded p-3">
-                    <h4 class="text-center">{{ sub.name }}</h4>
+                    <h4 class="text-center"><a href="#" data-bs-toggle="modal" data-bs-target="#modal{{ sub.id }}">
+                        {{ sub.name }}
+                    </a></h4>
+                    <div class="modal fade" id="modal{{ sub.id }}" tabindex="-1" aria-labelledby="modalLabel{{ sub.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="modalLabel{{ sub.id }}">{{ sub.name }}</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <p>{{ sub.description }}</p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
                     {% if chapters %}
                     <table class="table table-bordered mt-3">
@@ -39,7 +59,7 @@
                                 </td>
                                 <td class="text-center">{{ chapter_questions_count[chapter.id] }}</td>
                                 <td>
-                                    <form action="/dashboard/admin/edit_chapter/{{ chapter.id }}" method="post" class="d-inline">
+                                    <form action="/dashboard/admin/edit_chapter/{{ chapter.id }}" method="get" class="d-inline">
                                         <button type="submit" class="btn btn-warning btn-sm">Edit</button>
                                     </form>
                                     <form action="/dashboard/admin/delete_chapter/{{ chapter.id }}" method="post" class="d-inline">

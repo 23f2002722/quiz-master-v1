@@ -1,0 +1,13 @@
+<form method="POST">
+    <h2>Question {{ current_index }} / {{ total_questions }}</h2>
+    <p>{{ question.question_statement }}</p>
+
+    <input type="radio" name="option" value="{{ question.option1 }}" {% if selected_answer == question.option1 %}checked{% endif %}> {{ question.option1 }}<br>
+    <input type="radio" name="option" value="{{ question.option2 }}" {% if selected_answer == question.option2 %}checked{% endif %}> {{ question.option2 }}<br>
+    <input type="radio" name="option" value="{{ question.option3 }}" {% if selected_answer == question.option3 %}checked{% endif %}> {{ question.option3 }}<br>
+    <input type="radio" name="option" value="{{ question.option4 }}" {% if selected_answer == question.option4 %}checked{% endif %}> {{ question.option4 }}<br>
+
+    <button type="submit" name="prev">Previous</button>
+    <button type="submit" name="next">Next</button>
+    <button type="submit" name="submit">Submit</button>
+</form>

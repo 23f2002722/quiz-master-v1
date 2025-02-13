@@ -10,11 +10,30 @@
         <div class="col-md-6 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title">{{ quiz.type }} ({{ quiz.chapter.name }})</h5>
+                    <h5 class="card-title">{{ quiz.type }} (<a href="#" data-bs-toggle="modal" data-bs-target="#modal{{ quiz.chapter.id }}">
+                        {{ quiz.chapter.name }}
+                    </a>)</h5>
+                    <div class="modal fade" id="modal{{ quiz.chapter.id }}" tabindex="-1" aria-labelledby="modalLabel{{ quiz.chapter.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="modalLabel{{ quiz.chapter.id }}">{{ quiz.chapter.name }}</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <p>{{ quiz.chapter.description }}</p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     <h6 class="text-muted">{{ quiz.chapter.subject.name }}</h6>
-                    <p class="mb-1"><strong>Date:</strong> {{ quiz.date_of_quiz }}</p>
+                    <p><strong>Date:</strong> {{ quiz.date_of_quiz.strftime('%d-%m-%Y') }}</p>
                     <p class="mb-1"><strong>Duration:</strong> {{ quiz.time_duration }}</p>
                     <p class="mb-3"><strong>Remarks:</strong> {{ quiz.remarks }}</p>
+                    <td class="text-center">{{ quiz_questions_count[quiz.id] }}</td>
                     <table class="table table-bordered table-sm">
                         <thead class="thead-light">
                             <tr>

@@ -20,7 +20,7 @@ class User(db.Model):
     role = db.Column(db.Enum("user", "admin", name="user_roles"), default="user",)
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
-    scores = db.relationship('Score', backref='user', lazy=True)
+    scores = db.relationship('Score', backref='user', lazy=True, cascade="all, delete-orphan")
 
     # def __repr__(self):
     #     return f'<User {self.username}>'

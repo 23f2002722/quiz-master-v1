@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Your Quiz Scores</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Quiz</th>
+                <th>Chapter</th>
+                <th>Date Attempted</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for score, quiz in scores %}
+            <tr>
+                <td>{{ quiz.type }}</td>
+                <td>{{ quiz.chapter.name }}</td>
+                <td>{{ score.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ score.total_score }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" class="text-center">No attempted quizzes yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -17,9 +17,10 @@ block content %}
         <label for="text">Type:</label>
         <input type="text" id="text" name="type">
         <label for="date">Date:</label>
-        <input type="date" id="date" name="date">
+        <input type="date" id="date" name="date" min="{{ current_date }}" required>
+        
 
-        <label for="duration">Duration:</label>
+        <label for="duration">Duration (in minutes):</label>
         <input type="int" id="duration" name="duration">
         <label for="text">Remarks:</label>
         <input type="text" id="text" name="remarks">
@@ -27,7 +28,7 @@ block content %}
 
         <div class="buttons">
             <button type="submit" class="save">Save</button>
-            <button type="button" class="cancel" onclick="window.history.back()">Cancel</button>
+            <a href="{{ request.referrer }}" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
 </div>

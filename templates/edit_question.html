@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Question{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Edit Question</h2>
+
+    <form action="{{ url_for('edit_question', question_id=question.id) }}" method="POST">
+        <div class="mb-3">
+            <label for="question_statement" class="form-label">Question</label>
+            <input type="text" id="question_statement" name="question_statement" class="form-control" 
+                   value="{{ question.question_statement }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="option1" class="form-label">Option A</label>
+            <input type="text" id="option1" name="option1" class="form-control" 
+                   value="{{ question.option1 }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="option2" class="form-label">Option B</label>
+            <input type="text" id="option2" name="option2" class="form-control" 
+                   value="{{ question.option2 }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="option3" class="form-label">Option C</label>
+            <input type="text" id="option3" name="option3" class="form-control" 
+                   value="{{ question.option3 }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="option4" class="form-label">Option D</label>
+            <input type="text" id="option4" name="option4" class="form-control" 
+                   value="{{ question.option4 }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="correct_option" class="form-label">Correct Answer</label>
+            <select id="correct_option" name="correct_option" class="form-select" required>
+                <option value="A" {% if question.correct_option == "A" %}selected{% endif %}>A</option>
+                <option value="B" {% if question.correct_option == "B" %}selected{% endif %}>B</option>
+                <option value="C" {% if question.correct_option == "C" %}selected{% endif %}>C</option>
+                <option value="D" {% if question.correct_option == "D" %}selected{% endif %}>D</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Question</button>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
