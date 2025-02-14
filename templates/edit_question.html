@@ -40,10 +40,10 @@
         <div class="mb-3">
             <label for="correct_option" class="form-label">Correct Answer</label>
             <select id="correct_option" name="correct_option" class="form-select" required>
-                <option value="A" {% if question.correct_option == "A" %}selected{% endif %}>A</option>
-                <option value="B" {% if question.correct_option == "B" %}selected{% endif %}>B</option>
-                <option value="C" {% if question.correct_option == "C" %}selected{% endif %}>C</option>
-                <option value="D" {% if question.correct_option == "D" %}selected{% endif %}>D</option>
+                <option value=1 {% if question.correct_option == "A" %}selected{% endif %}>A</option>
+                <option value=2 {% if question.correct_option == "B" %}selected{% endif %}>B</option>
+                <option value=3 {% if question.correct_option == "C" %}selected{% endif %}>C</option>
+                <option value=4 {% if question.correct_option == "D" %}selected{% endif %}>D</option>
             </select>
         </div>
 

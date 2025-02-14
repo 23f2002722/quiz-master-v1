@@ -1,0 +1,43 @@
+{% extends "base.html" %} {% block title %}Student Details{% endblock %} {%
+    block content %}
+    
+    <div class="container mt-4">
+        <h1>Welcome, {{ user.full_name }}</h1>
+
+        <h3>Subject-wise Top Scores</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Top Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject in subject_wise_top_scores %}
+                <tr>
+                    <td>{{ subject.name }}</td>
+                    <td>{{ subject.top_score }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Subject-wise User Attempts</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Number of Users Attempted</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject in subject_wise_user_attempts %}
+                <tr>
+                    <td>{{ subject.name }}</td>
+                    <td>{{ subject.user_count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endblock %}

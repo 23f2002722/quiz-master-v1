@@ -1,13 +1,50 @@
-<form method="POST">
-    <h2>Question {{ current_index }} / {{ total_questions }}</h2>
-    <p>{{ question.question_statement }}</p>
 
-    <input type="radio" name="option" value="{{ question.option1 }}" {% if selected_answer == question.option1 %}checked{% endif %}> {{ question.option1 }}<br>
-    <input type="radio" name="option" value="{{ question.option2 }}" {% if selected_answer == question.option2 %}checked{% endif %}> {{ question.option2 }}<br>
-    <input type="radio" name="option" value="{{ question.option3 }}" {% if selected_answer == question.option3 %}checked{% endif %}> {{ question.option3 }}<br>
-    <input type="radio" name="option" value="{{ question.option4 }}" {% if selected_answer == question.option4 %}checked{% endif %}> {{ question.option4 }}<br>
 
-    <button type="submit" name="prev">Previous</button>
-    <button type="submit" name="next">Next</button>
-    <button type="submit" name="submit">Submit</button>
-</form>
+<div class="container">
+    <h2>Question {{ index }}/{{ total }}</h2>
+    
+    <p>Time Remaining: <span id="timer">{{ time_left // 60 }}</span> minutes <span id="timer-seconds">{{ time_left % 60 }}</span> seconds</p>
+
+    <form method="POST">
+        <p>{{ question.question_statement }}</p>
+        <input type="radio" id="option1" name="option" value="1" {% if selected == "1" %}checked{% endif %}>
+        <label for="option1">{{ question.option1 }}</label><br>
+    
+        <input type="radio" id="option2" name="option" value="2" {% if selected == "2" %}checked{% endif %}>
+        <label for="option2">{{ question.option2 }}</label><br>
+    
+        <input type="radio" id="option3" name="option" value="3" {% if selected == "3" %}checked{% endif %}>
+        <label for="option3">{{ question.option3 }}</label><br>
+    
+        <input type="radio" id="option4" name="option" value="4" {% if selected == "4" %}checked{% endif %}>
+        <label for="option4">{{ question.option4 }}</label><br>
+    
+        <button type="submit" name="prev" {% if index == 1 %}disabled{% endif %}>Previous</button>
+        <button type="submit" name="next" {% if index == total %}disabled{% endif %}>Next</button>
+        <button type="submit" name="submit">Submit</button>
+    </form>
+</div>
+
+<script>
+    // Timer countdown
+    let timeLeft = {{ time_left }};
+    
+    function updateTimer() {
+        if (timeLeft <= 0) {
+            document.forms[0].submit();
+            return;
+        }
+        
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+
+        document.getElementById("timer").textContent = minutes;
+        document.getElementById("timer-seconds").textContent = seconds.toString().padStart(2, '0'); // Add leading zero
+
+        timeLeft--;
+        setTimeout(updateTimer, 1000);
+    }
+
+    updateTimer();
+</script>
+

@@ -22,6 +22,18 @@ def auth_required(func):
 
     return inner
 
+def auth_required_admin(func):
+    @wraps(func)
+    def inner(*args, **kwargs):
+        user=User.query.get(session["user_id"])
+        if user.role=="admin":
+            return func(*args, **kwargs)
+        else:
+            flash("Unauthorised")
+            return redirect(url_for("dashboard"))
+
+    return inner
+
 # ================
 # Dashboard Route 
 # ================
@@ -55,11 +67,9 @@ def dashboard():
 # ================
 @app.route("/dashboard/admin/add_subject", methods=["GET", "POST"])
 @auth_required
+@auth_required_admin
 def add_subject():
         user = User.query.get(session["user_id"])
-        if user.role=="user":
-            flash("Not authorised.")
-            return redirect(url_for("dashboard"))
         if request.method=="POST":
              name = request.form.get("name")
              description = request.form.get("description")
@@ -76,6 +86,7 @@ def add_subject():
 # ================
 @app.route("/dashboard/admin/delete_subject/<int:subject_id>", methods=["POST"])
 @auth_required
+@auth_required_admin
 def delete_subject(subject_id):
     sub = Subject.query.filter_by(id=subject_id).first()
     db.session.delete(sub)
@@ -88,6 +99,7 @@ def delete_subject(subject_id):
 # ================
 @app.route("/dashboard/admin/add_chapter/<int:subject_id>", methods=["GET","POST"])
 @auth_required
+@auth_required_admin
 def add_chapter(subject_id):
     user = User.query.get(session["user_id"])
     if request.method=="POST":
@@ -106,6 +118,7 @@ def add_chapter(subject_id):
 # ================
 @app.route("/dashboard/admin/edit_chapter/<int:chapter_id>", methods=["GET","POST"])
 @auth_required
+@auth_required_admin
 def edit_chapter(chapter_id):
     user=User.query.get(session["user_id"])
     chapter=Chapter.query.filter_by(id=chapter_id).first()
@@ -123,6 +136,7 @@ def edit_chapter(chapter_id):
 # ================
 @app.route("/dashboard/admin/delete_chapter/<int:chapter_id>", methods=["POST"])
 @auth_required
+@auth_required_admin
 def delete_chapter(chapter_id):
     chapter = Chapter.query.filter_by(id=chapter_id).first()
     db.session.delete(chapter)
@@ -135,6 +149,7 @@ def delete_chapter(chapter_id):
 # ================
 @app.route("/dashboard/quiz_management", methods=["GET","POST"])
 @auth_required
+@auth_required_admin
 def quiz_management():
      user=User.query.get(session["user_id"])
      quiz=db.session.query(Quiz).all()
@@ -151,6 +166,7 @@ def quiz_management():
 # ================
 @app.route("/dashboard/quiz/<int:chapter_id>", methods=["GET","POST"])
 @auth_required
+@auth_required_admin
 def quiz(chapter_id):
      user=User.query.get(session["user_id"])
      quiz=Quiz.query.filter_by(chapter_id=chapter_id).all()
@@ -167,6 +183,7 @@ def quiz(chapter_id):
 # ================
 @app.route("/dashboard/quiz_management/add_quiz", methods=["GET","POST"])
 @auth_required
+@auth_required_admin
 def add_quiz():
     user = User.query.get(session["user_id"])
     if request.method=="POST":
@@ -219,6 +236,7 @@ def add_quiz():
 # ================
 @app.route("/dashboard/delete_quiz/<int:quiz_id>", methods=["POST"])
 @auth_required
+@auth_required_admin
 def delete_quiz(quiz_id):
     quiz=Quiz.query.filter_by(id=quiz_id).first()
     db.session.delete(quiz)
@@ -232,6 +250,7 @@ def delete_quiz(quiz_id):
 # ================
 @app.route("/dashboard/quiz_management/add_question/<int:quiz_id>", methods=["GET","POST"])
 @auth_required
+@auth_required_admin
 def add_question(quiz_id):
     if request.method == 'POST':
         statement = request.form.get('question_statement')
@@ -278,6 +297,7 @@ def add_question(quiz_id):
 # ================
 @app.route("/dashboard/quiz_management/edit_question/<int:question_id>", methods=["GET","POST"])
 @auth_required
+@auth_required_admin
 def edit_question(question_id):
      user=User.query.get(session["user_id"])
      question=Question.query.filter_by(id=question_id).first()
@@ -300,6 +320,7 @@ def edit_question(question_id):
 # ================
 @app.route("/dashboard/quiz_management/delete_question/<int:question_id>", methods=["POST"])
 @auth_required
+@auth_required_admin
 def delete_question(question_id):
     question=Question.query.filter_by(id=question_id).first()
     db.session.delete(question)
@@ -311,6 +332,7 @@ def delete_question(question_id):
 # ================
 @app.route("/admin/show_users", methods=["GET","POST"])
 @auth_required
+@auth_required_admin
 def show_users():
     user=User.query.get(session["user_id"])
     users=User.query.filter_by(role="user").all()
@@ -321,6 +343,7 @@ def show_users():
 # ================
 @app.route("/admin/delete_user/<int:id>", methods=["POST"])
 @auth_required
+@auth_required_admin
 def delete_user(id):
     user=User.query.get(id)
     db.session.delete(user)

@@ -31,7 +31,7 @@ class Quiz(db.Model):
     type=db.Column(db.String(50))
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'), nullable=False)
     date_of_quiz = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    time_duration = db.Column(db.String(5))  # format: HH:MM
+    time_duration = db.Column(db.Integer)  # format: HH:MM
     remarks = db.Column(db.String(255))
 
     questions = db.relationship('Question', backref='quiz', lazy=True, cascade="all, delete-orphan")
