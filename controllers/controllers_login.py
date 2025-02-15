@@ -135,3 +135,78 @@ def profile():
 
 
 
+@app.route('/search', methods=['GET'])
+@auth_required
+def search():
+    current_user = User.query.get(session["user_id"])
+    category = request.args.get('category')
+    query = request.args.get('query', '').strip()
+
+    if current_user.role == "admin":
+        # Admin search logic
+        if category == "users":
+            # Search users by name, username (email), or DOB
+            users = User.query.filter(
+                (User.full_name.ilike(f"%{query}%")) | 
+                (User.username.ilike(f"%{query}%")) | 
+                (User.dob.ilike(f"%{query}%")) , (User.role != "admin")
+            ).all()
+            
+            return render_template('search.html', category=category, users=users, user=current_user)
+
+        elif category == "quiz":
+            # Search quiz by type, chapter name, or subject name
+            quiz = Quiz.query.join(Chapter).join(Subject).filter(
+                (Quiz.type.ilike(f"%{query}%")) | 
+                (Chapter.name.ilike(f"%{query}%")) | 
+                (Subject.name.ilike(f"%{query}%"))
+            ).all()
+            quiz_questions_count = {
+    quiz.id: db.session.query(Question).filter(Question.quiz_id == quiz.id).count()
+    for quiz in quiz
+}
+            return render_template('search.html', category=category, quiz=quiz, user=current_user,  quiz_questions_count=quiz_questions_count)
+
+        elif category == "chapters":
+            # Search chapters by name
+            chapters = Chapter.query.filter(
+                Chapter.name.ilike(f"%{query}%")
+            ).all()
+            chapter_questions_count = {chapter.id: db.session.query(Question).join(Quiz).filter(Quiz.chapter_id == chapter.id).count()
+             for chapter in chapters}
+            return render_template('search.html', category=category, chapters=chapters, user=current_user,chapter_questions_count=chapter_questions_count)
+
+        elif category == "subjects":
+            # Search subjects by name
+            subjects = Subject.query.filter(
+                Subject.name.ilike(f"%{query}%")
+            ).all()
+            return render_template('search.html', category=category, subjects=subjects, user=current_user)
+
+    else:
+        # User search logic
+        if category == "quiz":
+            # Search quiz by type, chapter name, or subject name
+            quiz = Quiz.query.join(Chapter).join(Subject).filter(
+                (Quiz.type.ilike(f"%{query}%")) | 
+                (Chapter.name.ilike(f"%{query}%")) | 
+                (Subject.name.ilike(f"%{query}%"))
+            ).all()
+            return render_template('search.html', category=category, quiz=quiz, user=current_user)
+
+        elif category == "scores":
+            # Search scores by date of attempt, score, chapter name, type, or subject name
+            scores = db.session.query(Score, Quiz).join(Quiz).join(Chapter).join(Subject).filter(
+                (Score.user_id == current_user.id) & 
+                (
+                    (Score.timestamp.ilike(f"%{query}%")) | 
+                    (Score.total_score.ilike(f"%{query}%")) | 
+                    (Chapter.name.ilike(f"%{query}%")) | 
+                    (Quiz.type.ilike(f"%{query}%")) | 
+                    (Subject.name.ilike(f"%{query}%"))
+                )
+            ).all()
+            return render_template('search.html', category=category, scores=scores, user=current_user)
+
+    # Default return if no category matches
+    return render_template('search.html', category=None, user=current_user)

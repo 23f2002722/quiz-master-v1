@@ -1,44 +1,86 @@
-{% extends "base.html" %} {% block title %}Student Details{% endblock %} {%
-    block content %}
-    
+{% extends "base.html" %}
 
-    <div class="container mt-4">
-        <h1>Welcome, {{ user.full_name }}</h1>
+{% block title %}Summary{% endblock %}
 
-        <h3>Subject-wise Number of Attempts</h3>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Subject</th>
-                    <th>Number of Attempts</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for subject in subject_wise_attempts %}
-                <tr>
-                    <td>{{ subject.name }}</td>
-                    <td>{{ subject.attempt_count }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+{% block content %}
+<div class="container mt-4">
+    <h1>Welcome, {{ user.full_name }}</h1>
 
-        <h3>Month-wise Number of Quizzes Attempted</h3>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Month</th>
-                    <th>Number of Attempts</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for month in month_wise_attempts %}
-                <tr>
-                    <td>{{ month.month }}</td>
-                    <td>{{ month.attempt_count }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-{%endblock%}
+    <h3>Subject-wise Quizzes Attempted</h3>
+    <canvas id="subjectAttemptsChart" width="400" height="200"></canvas>
+
+    <h3>Month-wise Quizzes Attempted</h3>
+    <canvas id="monthAttemptsChart" width="400" height="200"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Data for Subject-wise Quizzes Attempted
+    const subjectAttemptsData = {
+        labels: [{% for subject in subject_wise_attempts %}"{{ subject.name }}",{% endfor %}],
+        datasets: [{
+            label: 'Quizzes Attempted',
+            data: [{% for subject in subject_wise_attempts %}{{ subject.attempt_count }},{% endfor %}],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    // Data for Month-wise Quizzes Attempted
+    const monthAttemptsData = {
+        labels: [{% for month in month_wise_attempts %}"{{ month.month }}",{% endfor %}],
+        datasets: [{
+            label: 'Quizzes Attempted',
+            data: [{% for month in month_wise_attempts %}{{ month.attempt_count }},{% endfor %}],
+            backgroundColor: [
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    // Render Subject-wise Quizzes Attempted Chart
+    const subjectAttemptsCtx = document.getElementById('subjectAttemptsChart').getContext('2d');
+    new Chart(subjectAttemptsCtx, {
+        type: 'bar',
+        data: subjectAttemptsData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Render Month-wise Quizzes Attempted Chart
+    const monthAttemptsCtx = document.getElementById('monthAttemptsChart').getContext('2d');
+    new Chart(monthAttemptsCtx, {
+        type: 'bar',
+        data: monthAttemptsData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

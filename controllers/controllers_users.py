@@ -109,9 +109,6 @@ def quiz_page():
     elapsed_time = (datetime.now() - datetime.strptime(quiz_state['start_time'], '%Y-%m-%d %H:%M:%S')).total_seconds()
     time_left = max(0, quiz_state['time_duration'] - elapsed_time)
 
-    # Auto-submit if time is up
-    if time_left <= 0:
-        return redirect(url_for('submit_quiz'))
 
     # Retrieve the current question and selected answer
     current_question = questions[current_index]
@@ -160,6 +157,7 @@ def submit_quiz():
     # Clear session
     session.pop('quiz_state', None)
 
+    
     flash(f"Quiz submitted! Your score: {total_score}/{len(questions)}", "success")
     return redirect(url_for('dashboard'))
 
@@ -229,7 +227,6 @@ def summary():
                                subject_wise_attempts=subject_wise_attempts, 
                                month_wise_attempts=month_wise_attempts, 
                                user=current_user)
-    
 
 
 @app.route('/quiz_analytics/<int:quiz_id>')
