@@ -1,37 +1,49 @@
-{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {%
-block content %}
+{% extends "base.html" %} 
 
+{% block title %}Add Quiz{% endblock %} 
 
+{% block content %}
 
-<div class="container">
-    <h2>New Quiz</h2>
-    <form action="/dashboard/quiz_management/add_quiz" method="POST">
-        <label for="chapter">Chapter ID:</label>
-        <select id="chapter" name="chapter_id">
-            <option value="">Select Chapter</option>
-            {% for ch in chapter %}
-            <option value="{{ ch.id }}">{{ch.id}} [{{ ch.name }}]</option>
-            {% endfor %}
-        </select>
+<div class="container mt-4">
+    <h2 class="text-center">New Quiz</h2>
+    <div class="card p-4 shadow-sm">
+        <form action="/dashboard/quiz_management/add_quiz" method="POST">
+            <div class="mb-3">
+                <label for="chapter" class="form-label">Chapter ID</label>
+                <select id="chapter" name="chapter_id" class="form-select">
+                    <option value="">Select Chapter</option>
+                    {% for ch in chapter %}
+                    <option value="{{ ch.id }}">{{ ch.id }} [{{ ch.name }}]</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <label for="text">Type:</label>
-        <input type="text" id="text" name="type">
-        <label for="date">Date:</label>
-        <input type="date" id="date" name="date" min="{{ current_date }}" required>
-        
+            <div class="mb-3">
+                <label for="text" class="form-label">Type</label>
+                <input type="text" id="text" name="type" class="form-control">
+            </div>
 
-        <label for="duration">Duration (in minutes):</label>
-        <input type="int" id="duration" name="duration">
-        <label for="text">Remarks:</label>
-        <input type="text" id="text" name="remarks">
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" id="date" name="date" min="{{ current_date }}" class="form-control" required>
+            </div>
 
+            <div class="mb-3">
+                <label for="duration" class="form-label">Duration (in minutes)</label>
+                <input type="number" id="duration" name="duration" class="form-control">
+            </div>
 
-        <div class="buttons">
-            <button type="submit" class="save">Save</button>
-            <a href="{{ request.referrer }}" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
+            <div class="mb-3">
+                <label for="remarks" class="form-label">Remarks</label>
+                <input type="text" id="remarks" name="remarks" class="form-control">
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="{{ request.referrer }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
 </div>
-
 
 {% endblock %}

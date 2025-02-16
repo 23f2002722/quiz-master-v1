@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Registration{% endblock %}
+{% block title %}Registration Page{% endblock %}
 {% block content %}
 
 <div class="container py-5">
@@ -7,7 +7,7 @@
     <div class="col-md-8 col-lg-6">
       <div class="card shadow-lg border-0 rounded-lg">
         <div class="card-body p-4 p-md-5">
-          <!-- Logo and Tagline -->
+          
           <div class="text-center mb-4">
             <h1 class="display-5 text-primary fw-bold mb-2">Welcome</h1>
             <h4 class="mb-2">QuizMaster - Challenge Your Mind</h4>
@@ -22,7 +22,7 @@
                 <div class="form-floating mb-3">
                   <input type="email" class="form-control" id="username" name="username"
                     placeholder="Registration Number" required>
-                  <label for="username">Username (E-mail)</label>
+                  <label for="username">Username (email)</label>
                 </div>
               </div>
               <div class="col-md-6">
@@ -57,7 +57,7 @@
                   <i class="bi bi-calendar-event me-2"></i>Date of birth
                 </label>
                 <div class="input-group">
-                  <input type="date" class="form-control" id="date" name="dob" required min="{{ today }}" />
+                  <input type="date" class="form-control" id="date" name="dob" required max="{{ current_date }}" />
                 </div>
                 <div class="invalid-feedback">
                   <i class="bi bi-exclamation-circle me-1"></i>
@@ -75,19 +75,19 @@
                   <option value="Graduation">Graduation</option>
                   <option value="Post Graduation">Post Graduation</option>
                 </select>
-                
+
               </div>
             </div><br>
 
 
-              <div class="d-grid gap-3">
-                <button type="submit" class="btn btn-primary btn-lg">
-                  <i class="bi bi-person-plus me-2"></i>Register
-                </button>
-                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
-                  <i class="bi bi-arrow-left me-2"></i>Back to Login
-                </a>
-              </div>
+            <div class="d-grid gap-3">
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="bi bi-person-plus me-2"></i>Register
+              </button>
+              <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to Login
+              </a>
+            </div>
           </form>
 
 
@@ -97,66 +97,5 @@
   </div>
 </div>
 
-<style>
-  .form-floating>.form-control,
-  .form-floating>.form-select {
-    height: calc(3.5rem + 2px);
-    line-height: 1.25;
-  }
 
-  .form-floating>label {
-    padding: 1rem 0.75rem;
-  }
-
-  .card {
-    transition: transform 0.2s ease;
-  }
-
-  .btn-primary {
-    border: none;
-    transition: all 0.3s ease;
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  }
-
-  .form-control:focus,
-  .form-select:focus {
-    border-color: #9f1ae2;
-    box-shadow: 0 0 0 0.25rem rgba(159, 26, 226, 0.25);
-  }
-
-  .text-primary {
-    color: #FFC107 !important;
-  }
-</style>
-
-<script>
-  // Form validation
-  (function () {
-    'use strict'
-    var forms = document.querySelectorAll('.needs-validation')
-    Array.prototype.slice.call(forms)
-      .forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-          if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
-          }
-          form.classList.add('was-validated')
-        }, false)
-      })
-  })()
-
-  // Password match validation
-  document.getElementById('confirm_password').addEventListener('input', function () {
-    if (this.value !== document.getElementById('password').value) {
-      this.setCustomValidity('Passwords do not match');
-    } else {
-      this.setCustomValidity('');
-    }
-  });
-</script>
 {% endblock %}

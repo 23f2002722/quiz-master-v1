@@ -1,18 +1,29 @@
 {% extends 'base.html' %}
-{% block title %}Login page{% endblock %}
+{% block title %}Login Page{% endblock %}
 {% block content %}
 
-<div>
-    <h1 style="color: navy; font-family: 'Montserrat', sans-serif">Welcome to QuizMaster</h1>
-    <h4 style="color: #4d4d4d; font-family: 'Lobster', cursive">Challenge Your Mind</h4>
-</div>
+
+
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h1 style="color: navy; font-family: 'Montserrat', sans-serif">Welcome to QuizMaster</h1>
+        <h4 style="color: #4d4d4d; font-family: 'Lobster', cursive">Challenge Your Mind</h4>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card shadow-lg border-0 rounded-lg">
+          <div class="card-body p-4 p-md-5">
+            
+            <div class="text-center mb-4">
+                <h4 class="mb-2">Login</h4>
+            </div>
 
 <!-- Login Form -->
 <form action="" method="post">
     <div class="mb-4">
         <div class="input-group">
             <span class="input-group-text bg-light border-end-0">
-                <i class="bi bi-person text-muted"></i>
+                
             </span>
             <input type="text" 
                    class="form-control border-start-0 ps-0" 
@@ -24,7 +35,7 @@
     <div class="mb-4">
         <div class="input-group">
             <span class="input-group-text bg-light border-end-0">
-                <i class="bi bi-lock text-muted"></i>
+                
             </span>
             <input type="password" 
                    class="form-control border-start-0 ps-0" 
@@ -51,35 +62,10 @@
         </div>
     </div>
  
-    
-    <style>
-        .text-primary {
-            color: #FFC107 !important;
-        }
-        .input-group-text {
-            background-color: #f8f9fa;
-            border-right: none;
-        }
-        .form-control {
-            border-left: none;
-            box-shadow: none !important;
-        }
-        .form-control:focus {
-            border-color: #dee2e6;
-        }
-        .form-control:focus + .input-group-text {
-            border-color: #dee2e6;
-        }
-        .btn-lg {
-            padding: 0.75rem 1.5rem;
-        }
-        .card {
-            border-radius: 1rem;
-        }
-        .card-body {
-            border-radius: 1rem;
-        }
-    </style>
-    
+</div>
+</div>
+</div>
+</div>
+</div>   
 {% endblock %}
 
