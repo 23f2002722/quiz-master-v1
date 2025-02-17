@@ -29,7 +29,7 @@
                             </a>
                         </td>
                         <td>{{ attempt.username }}</td>
-                        <td>{{ attempt.total_score }}</td>
+                        <td>{{ attempt.total_score }}/{{ quiz_questions_count[attempt.quiz_id] }}</td>
                         <td>{{ attempt.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                     </tr>
                     {% endfor %}

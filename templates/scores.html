@@ -2,32 +2,34 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Quiz Scores</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Quiz ID</th>
-                <th>Quiz</th>
-                <th>Chapter</th>
-                <th>Date Attempted</th>
-                <th>Score</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for score, quiz in scores %}
-            <tr>
-                <td>{{ quiz.id }}</td>
-                <td>{{ quiz.type }}</td>
-                <td>{{ quiz.chapter.name }}</td>
-                <td>{{ score.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                <td>{{ score.total_score }}</td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="4" class="text-center">Not attempted any quizzes yet.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <h2 class="mb-3">Quiz Scores</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th>Quiz ID</th>
+                    <th>Quiz</th>
+                    <th>Chapter</th>
+                    <th>Date Attempted</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for score, quiz in scores %}
+                <tr>
+                    <td>{{ quiz.id }}</td>
+                    <td>{{ quiz.type }}</td>
+                    <td>{{ quiz.chapter.name }}</td>
+                    <td>{{ score.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ score.total_score }}/{{ quiz_questions_count[quiz.id] }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center alert alert-warning">Not attempted any quizzes yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

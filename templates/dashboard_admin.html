@@ -16,7 +16,7 @@
         <h2>Subjects</h2>
 
         {% if subject %}
-        <div class="row">
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-3 g-4">
             {% for sub in subject %}
             <div class="col-md-6 col-lg-5 mb-4">
                 <div class="card shadow border rounded p-3 d-flex flex-column">
@@ -52,7 +52,7 @@
                         <thead class="table-primary text-center align-middle">
                             <tr>
                                 <th>Chapter Name</th>
-                                <th>No. of Questions</th>
+                                <th >No. of Questions</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -60,7 +60,7 @@
                         <tbody>
                             {% for chapter in chapters if chapter.subject_id == sub.id %}
                             <tr>
-                                <td class="text-wrap text-break" style="width:50%;">
+                                <td class="text-wrap text-break" >
                                     <form action="/dashboard/quiz/{{ chapter.id }}" method="POST" class="d-inline">
                                         <button type="submit" class="btn btn-link  text-decoration-none p-0 border-0">{{ chapter.name }}</button>
                                     </form>

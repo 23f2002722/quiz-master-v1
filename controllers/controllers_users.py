@@ -157,8 +157,11 @@ def view_scores(user_id):
     user = User.query.get(session["user_id"])
 
     scores = db.session.query(Score, Quiz).join(Quiz, Score.quiz_id == Quiz.id).filter(Score.user_id == user_id).all()
-
-    return render_template('scores.html', scores=scores, user=user)
+    quiz_questions_count = {
+    quiz.id: db.session.query(Question).filter(Question.quiz_id == quiz.id).count()
+    for quiz in Quiz.query.all()
+}
+    return render_template('scores.html', scores=scores, quiz_questions_count=quiz_questions_count, user=user)
 
 
 # ==================
@@ -232,12 +235,16 @@ def quiz_analytics(quiz_id):
         User.full_name,
         User.username,
         Score.total_score,
-        Score.timestamp
+        Score.timestamp,
+        Score.quiz_id
     ).join(Score, Score.user_id == User.id)\
      .filter(Score.quiz_id == quiz_id)\
      .all()
-
+    quiz_questions_count = {
+    quiz_id: db.session.query(Question).filter(Question.quiz_id == quiz_id).count()
+}
     return render_template('quiz_analytics.html', 
                            quiz_attempts=quiz_attempts, 
-                           quiz_id=quiz_id, 
+                           quiz_id=quiz_id,
+                           quiz_questions_count=quiz_questions_count,
                            user=user)
