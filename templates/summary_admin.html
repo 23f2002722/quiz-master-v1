@@ -1,0 +1,78 @@
+{% extends "base.html" %} 
+{% block title %}Summary{% endblock %} 
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center">Summary Charts</h1>
+        
+        <div class="row align-items-center">
+            <div class="col-md-6 d-flex flex-column align-items-center">
+                <h3 class="text-center">Subject-wise Top Scores</h3>
+                <div style="width: 300px; height: 300px;">
+                    <canvas id="topScoresChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex flex-column align-items-center">
+                <h3 class="text-center">Subject-wise User Attempts</h3>
+                <div style="width: 300px; height: 300px;">
+                    <canvas id="userAttemptsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Data for Subject-wise Top Scores (Bar Chart)
+            const topScoresCtx = document.getElementById('topScoresChart').getContext('2d');
+            const topScoresData = {
+                labels: [{% for subject in subject_wise_top_scores %}'{{ subject.name }}',{% endfor %}],
+                datasets: [{
+                    label: 'Top Score',
+                    data: [{% for subject in subject_wise_top_scores %}{{ subject.top_score }},{% endfor %}],
+                    backgroundColor: ['rgba(54, 162, 235, 0.6)', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 206, 86, 0.6)'],
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            };
+            new Chart(topScoresCtx, {
+                type: 'bar',
+                data: topScoresData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Data for Subject-wise User Attempts (Doughnut Chart)
+            const userAttemptsCtx = document.getElementById('userAttemptsChart').getContext('2d');
+            const userAttemptsData = {
+                labels: [{% for subject in subject_wise_user_attempts %}'{{ subject.name }}',{% endfor %}],
+                datasets: [{
+                    label: 'Number of Users Attempted',
+                    data: [{% for subject in subject_wise_user_attempts %}{{ subject.user_count }},{% endfor %}],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)'
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 1)',
+                    borderWidth: 1
+                }]
+            };
+            new Chart(userAttemptsCtx, {
+                type: 'doughnut',
+                data: userAttemptsData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        });
+    </script>
+{% endblock %}

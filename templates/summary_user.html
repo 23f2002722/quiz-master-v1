@@ -1,0 +1,81 @@
+{% extends "base.html" %} 
+{% block title %}Summary{% endblock %} 
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center">Welcome, {{ user.full_name }}</h1>
+        
+        <div class="row align-items-center">
+            <div class="col-md-6 d-flex flex-column align-items-center">
+                <h3 class="text-center">Subject-wise Number of Attempts</h3>
+                <div style="width: 300px; height: 300px;">
+                    <canvas id="subjectAttemptsChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex flex-column align-items-center">
+                <h3 class="text-center">Month-wise Number of Quizzes Attempted</h3>
+                <div style="width: 300px; height: 300px;">
+                    <canvas id="monthAttemptsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Data for Subject-wise Number of Attempts (Bar Chart)
+            const subjectAttemptsCtx = document.getElementById('subjectAttemptsChart').getContext('2d');
+            const subjectAttemptsData = {
+                labels: [{% for subject in subject_wise_attempts %}'{{ subject.name }}',{% endfor %}],
+                datasets: [{
+                    label: 'Number of Attempts',
+                    data: [{% for subject in subject_wise_attempts %}{{ subject.attempt_count }},{% endfor %}],
+                    backgroundColor: ['rgba(54, 162, 235, 0.6)', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 206, 86, 0.6)'],
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            };
+            new Chart(subjectAttemptsCtx, {
+                type: 'bar',
+                data: subjectAttemptsData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Data for Month-wise Number of Quizzes Attempted (Doughnut Chart)
+            const monthAttemptsCtx = document.getElementById('monthAttemptsChart').getContext('2d');
+            const monthAttemptsData = {
+                labels: [{% for month in month_wise_attempts %}'{{ month.month }}',{% endfor %}],
+                datasets: [{
+                    label: 'Number of Attempts',
+                    data: [{% for month in month_wise_attempts %}{{ month.attempt_count }},{% endfor %}],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)', 
+                        'rgba(54, 162, 235, 0.6)', 
+                        'rgba(255, 206, 86, 0.6)', 
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)'
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 1)',
+                    borderWidth: 1
+                }]
+            };
+            new Chart(monthAttemptsCtx, {
+                type: 'doughnut',
+                data: monthAttemptsData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }
+            });
+        });
+    </script>
+{% endblock %}
