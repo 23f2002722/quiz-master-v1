@@ -23,7 +23,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Data for Subject-wise Number of Attempts (Bar Chart)
             const subjectAttemptsCtx = document.getElementById('subjectAttemptsChart').getContext('2d');
             const subjectAttemptsData = {
                 labels: [{% for subject in subject_wise_attempts %}'{{ subject.name }}',{% endfor %}],
@@ -49,7 +48,6 @@
                 }
             });
 
-            // Data for Month-wise Number of Quizzes Attempted (Doughnut Chart)
             const monthAttemptsCtx = document.getElementById('monthAttemptsChart').getContext('2d');
             const monthAttemptsData = {
                 labels: [{% for month in month_wise_attempts %}'{{ month.month }}',{% endfor %}],

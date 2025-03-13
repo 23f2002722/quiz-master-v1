@@ -218,3 +218,8 @@ def search():
             return render_template('search.html', category=category, scores=scores, user=user)
 
     return render_template('search.html', category=None, user=user)
+
+@app.context_processor
+def inject_admin_email():
+    admin_user = User.query.filter_by(role="admin").first()
+    return {"admin_email": admin_user.username}

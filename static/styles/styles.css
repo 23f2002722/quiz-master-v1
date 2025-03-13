@@ -1,35 +1,53 @@
+.form-floating>.form-control,
+.form-floating>.form-select {
+  height: calc(3.5rem + 2px);
+  line-height: 1.25;
+}
 
-  .form-floating>.form-control,
-  .form-floating>.form-select {
-    height: calc(3.5rem + 2px);
-    line-height: 1.25;
-  }
+.card {
+  transition: transform 0.2s ease;
+}
 
+.btn-primary {
+  border: none;
+  transition: all 0.3s ease;
+}
 
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
 
-  .card {
-    transition: transform 0.2s ease;
-  }
+.form-control:focus,
+.form-select:focus {
+  border-color: #9f1ae2;
+  box-shadow: 0 0 0 0.25rem rgba(159, 26, 226, 0.25);
+}
 
-  .btn-primary {
-    border: none;
-    transition: all 0.3s ease;
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  }
-
-  .form-control:focus,
-  .form-select:focus {
-    border-color: #9f1ae2;
-    box-shadow: 0 0 0 0.25rem rgba(159, 26, 226, 0.25);
-  }
-
-  .text-primary {
-    color: #FFC107 !important;
-  }
+.text-primary {
+  color: #FFC107 !important;
+}
 
 
+.btn-pink {
+  background-color: #f8c8dc;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+}
 
+.btn-pink:hover {
+  background-color: #f5a9c4;
+}
+
+.btn-group .btn:first-child {
+  border-top-right-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
+}
+
+.card {
+  width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  padding: 1rem;
+}

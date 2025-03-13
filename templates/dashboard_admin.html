@@ -20,7 +20,7 @@
             {% for sub in subject %}
             <div class="col-md-6 col-lg-5 mb-4">
                 <div class="card shadow border rounded p-3 d-flex flex-column">
-
+                        
                     <h4 class="text-center">
                         <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#modal{{ sub.id }}">
                             {{ sub.name }}
@@ -105,32 +105,5 @@
 {% endif %}
 </section>
 </div>
-
-<style>
-    .btn-pink {
-        background-color: #f8c8dc;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 5px;
-    }
-
-    .btn-pink:hover {
-        background-color: #f5a9c4;
-    }
-    .btn-group .btn:first-child {
-        border-top-right-radius: 4px !important;
-        border-bottom-right-radius: 4px !important;
-    }
-    .card {
-        width: 100%;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        padding: 1rem;
-    }
-    
-    
-    
-    
-</style>
 
 {% endblock %}

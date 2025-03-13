@@ -23,7 +23,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Data for Subject-wise Top Scores (Bar Chart)
             const topScoresCtx = document.getElementById('topScoresChart').getContext('2d');
             const topScoresData = {
                 labels: [{% for subject in subject_wise_top_scores %}'{{ subject.name }}',{% endfor %}],
@@ -49,7 +48,6 @@
                 }
             });
 
-            // Data for Subject-wise User Attempts (Doughnut Chart)
             const userAttemptsCtx = document.getElementById('userAttemptsChart').getContext('2d');
             const userAttemptsData = {
                 labels: [{% for subject in subject_wise_user_attempts %}'{{ subject.name }}',{% endfor %}],

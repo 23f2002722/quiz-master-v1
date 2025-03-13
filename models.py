@@ -22,8 +22,6 @@ class User(db.Model):
 
     scores = db.relationship('Score', backref='user', lazy=True, cascade="all, delete-orphan")
 
-    # def __repr__(self):
-    #     return f'<User {self.username}>'
 
 # Quizzes Table - Stores quiz data
 class Quiz(db.Model):
@@ -37,8 +35,6 @@ class Quiz(db.Model):
     questions = db.relationship('Question', backref='quiz', lazy=True, cascade="all, delete-orphan")
     scores = db.relationship('Score', backref='quiz', lazy=True, cascade="all, delete-orphan")
 
-    def __repr__(self):
-        return f'<Quiz {self.id}>'
 
 # Chapters Table - Stores chapter data
 class Chapter(db.Model):
@@ -60,8 +56,6 @@ class Subject(db.Model):
 
     chapters = db.relationship('Chapter', backref='subject', lazy=True, cascade="all, delete-orphan")
 
-    # def __repr__(self):
-    #     return f'<Subject {self.name}>'
 
 # Questions Table - Stores quiz questions
 class Question(db.Model):
@@ -74,8 +68,6 @@ class Question(db.Model):
     option4 = db.Column(db.String(100), nullable=False)
     correct_option = db.Column(db.String(100), nullable=False)
 
-    def __repr__(self):
-        return f'<Question {self.id}>'
 
 # Scores Table - Stores user's quiz attempt results
 class Score(db.Model):
@@ -87,8 +79,6 @@ class Score(db.Model):
 
     __table_args__ = (db.UniqueConstraint('quiz_id', 'user_id', name='unique_user_quiz_attempt'),)
 
-    def __repr__(self):
-        return f'<Score {self.user_id} - {self.quiz_id}>'
 
 
 with app.app_context():
