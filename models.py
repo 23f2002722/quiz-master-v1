@@ -45,8 +45,6 @@ class Chapter(db.Model):
 
     quizzes = db.relationship('Quiz', backref='chapter', lazy=True, cascade="all, delete-orphan")
 
-    def __repr__(self):
-        return f'<Chapter {self.name}>'
 
 # Subjects Table - Stores subject data
 class Subject(db.Model):

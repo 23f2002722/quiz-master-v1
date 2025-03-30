@@ -1,11 +1,8 @@
-import io
-import csv
 from flask import render_template, request, url_for, redirect, flash, session, Response
 from app import app
 from models import *
 from controllers.controllers_login import *
 from controllers.controllers_users import *
-from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
 from sqlalchemy.sql import func, and_
 from sqlalchemy import func
